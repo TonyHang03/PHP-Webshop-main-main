@@ -1,9 +1,10 @@
 <?php
-//config-settings for mysqli database connection as an array
+// config-settings for mysqli database connection as an array
+// THIS FILE SHOULD BE SAVED IN DIFFERENT LOCATION OR BE SECURED WITH THE USE OF HTACCESS
 $dbConfig = array(
     "servername" => "localhost",
-    "username" => "Riccardo",
-    "password"  => "Riccardo1992!",
-    "dbname" => "webshopDB",
+    "username" => "tony",
+    "password"  => "PNBKaF3JkgJC9dzo",
+    "dbname" => "webshop",
 );
 ?>

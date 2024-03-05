@@ -2,12 +2,8 @@
 $title = "Register";
 include_once "PHP_Structure/header.php";
 ?>
-<body>
     <div>
-                    <!------------------------------------------ PHP START ---------------------------------------->                    
-        <p><a href="index.php">Home</a></p>
-        <hr>
-        <br>
+        <p><a href="index.php">Home</a></p><hr><br>
         <form action="register.php" method="post">
             <div class="container">
                 <p>Register</p><br>
@@ -24,14 +20,14 @@ include_once "PHP_Structure/header.php";
                 <input type="email" id="email" name="email" placeholder="Email@email.com" required><br>
                 
                 <label>Phone Number:</label>
-                <input type="number" name="phone_number" id="phone_number" placeholder="Telephone Number" required><br>
+                <input type="number" name="phone_number" id="phoneNumber" placeholder="Phone Number" required><br>
                 
                 <label>Password:</label>
                 <input type="password" name="password" id="password" placeholder="Password" required><br>
                 
                 <label>Enter Password again:</label>
-                <input type="password" name="password_validation" id="password_validation" placeholder="Password" required><br>
-                <input type = "submit" name = "submit" value = "Register" required>            
+                <input type="password" name="passwordValidation" id="passwordValidation" placeholder="Password" required><br>
+                <input type = "submit" name = "submit" value = "Register" required>
             </div>
 
             <div>
@@ -39,48 +35,24 @@ include_once "PHP_Structure/header.php";
                 <a href="login.php">Login</a></p>
             </div>
         </form>
-        <?php
-        if(isset($_POST['submit'])) {
-            //DB connection
-            include './DB_Handle/connectDB.php';
-
-            //Attributes
-            $username = $_POST['username'];
-            $email = $_POST['email'];
-            $password = $_POST['password'];
-            $firstname = $_POST['firstname'];
-            $lastname = $_POST['lastname'];
-            $telephone_number = $_POST['telephone_number'];
-
-            //Hashing password
-            $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-
-            //Verify if the "email" already exist
-            $query_verify = mysqli_query($conn,"SELECT email FROM user WHERE email = '$email' AND username FROM user WHERE username = '$username'");
-
-
-            //Method
-            //Verify if the values mach with thoese in the DB
-            if(mysqli_num_rows($query_verify) != 0) {
-                echo "<div>
-                         <p>Something goes wrong, Try another One!</p>
-                     </div> <br>";
-                     
-                echo "<a href = 'index.php'><button>Go Back</button>";
-            }
-            else {
-                $sql = mysqli_query($conn, "INSERT INTO user (username, email, password, firstname, lastname, telephone_number)
-                    VALUES ('$username', '$email', '$hashed_password', '$firstname', '$lastname', '$telephone_number')") 
-                    or die("Error !!!!!");
-
-                    echo "<h2>Registration Successful</h2>"; 
-                    echo "Thank you for registering, " . $firstname . ' ' . $lastname . "!<br>"; 
-                    echo "You'll be redirected to login page in 5 seconds"; 
-                    header ("refresh:5; url=login.php"); 
-            }
-        }
-    ?>
-    </div>   
+    </div>
 <?php
 include_once "PHP_Structure/footer.php";
+?>
+<?php
+    if(isset($_POST['submit'])) {
+        // Include userController for registerUser function
+        include "PHP_Controller/userController.php";
+
+        // Register values as variables
+        $firstname = $_POST['firstname'];
+        $lastname = $_POST['lastname'];
+        $username = $_POST['username'];
+        $email = $_POST['email'];
+        $phoneNumber = $_POST['phoneNumber'];
+        $password = $_POST['password'];
+        $passwordValidation = $_POST['passwordValidation'];
+
+        
+    }
 ?>

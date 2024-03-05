@@ -8,18 +8,15 @@ include_once "PHP_Structure/header.php";
             session_start();
 
             // Verify if User are an Objekt
-            if (isset($_SESSION['user_data'])) 
-            {
+            if (isset($_SESSION['user_data'])) {
                 // If the user is alredy logged, write some welcome text or redirect where else
                 $user = $_SESSION['user_data'];
                 echo "Welcome " . $user['username'] . "!";
-                echo "<p><a href='offers.php'> Go to our Offers!</a></p>";
+                echo "<p><a href='offers.php'> Go to our Products!</a></p>";
             } 
-            else 
-            {
-                // If the user aren´t loggedin, show links to 'register' or 'login'
-                echo "<header>Welcome to our WebShop!<p><a href='login.php'>Login</a>
-                     or <a href='register.php'>Register</a></p></header>";
+            else {
+                // Show "Login" or "Register" if User is not logged in
+                echo "<header>Welcome to our WebShop!<p><a href='login.php'>Login</a> or <a href='register.php'>Register</a></p></header>";
             }
         ?>
 

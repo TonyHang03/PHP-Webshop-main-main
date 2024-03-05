@@ -1,7 +1,7 @@
 <?php 
 include "dbConfig.php";
 //create database connection
-    $conn = new mysqli($dbConfig[0], $dbConfig[1], $dbConfig[2], $dbConfig[3]);
+    $conn = new mysqli($dbConfig["servername"], $dbConfig["username"], $dbConfig["password"], $dbConfig["dbname"]);
 
 //check the connection for errors
 if($conn->connect_errno != 0) {
