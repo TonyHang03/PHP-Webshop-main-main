@@ -5,14 +5,13 @@ include_once "PHP_Structure/header.php";
 
        <body>
               <nav>
-                     <ul> 
+                     <ul>
                             <li><a href="index.php">Home</a></li> 
                             <li><a href="offers.php">Products</a></li> 
                             <li><a href="riccardomirabito03@gmail.com">Contact Us</a></li> 
                             <li><a href="cart.php">Cart</a></li> 
-                     </ul> 
+                     </ul>
               </nav>
-    
        <hr>
 
        <section> 

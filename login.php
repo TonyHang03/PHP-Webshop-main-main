@@ -1,15 +1,14 @@
 <?php
-$text = "";
 // if submit is set, use login function
 if(isset($_POST['submit'])) {
     // Include userController for loginUser function
     include "PHP_Controller/userController.php";
 
-    // Login Credential as variables
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-
-    $text = loginUser($username, $password);
+    // Login function 
+    $response = loginUser(
+        $_POST['username'], 
+        $_POST['password']
+    );
 }
 ?>
 
@@ -17,29 +16,29 @@ if(isset($_POST['submit'])) {
 $title = "Login";
 include_once "PHP_Structure/header.php";
 ?>
-    <div>
-        <p><a href="index.php">Home</a></p>
-        <hr>
-        <form action="" method="post">
-            <div class="container">
-                <p>Login</p>
-                <?php echo $text?>
-                <br>
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" placeholder="Username" required><br>
+    <form action="" method="post">
+        <div class="login">
+            <p>Login</p>
+            <div class="error">
+                <?php echo @$response; ?><br>
+            </div>
 
-                <label for="password">Password:</label>
+            <div class="login_field">
+                <label for="username">Username:</label><br>
+                <input type="text" id="username" name="username" placeholder="Username" value="<?php echo @$_POST["username"]?>" required><br>
+
+                <label for="password">Password:</label><br>
                 <input type="password" id="password" name="password" placeholder="Password" required><br>
 
                 <input type="submit" name="submit" value = "Login">
             </div>
+        </div>
 
-            <div>
-                <p>New Customer?<br>
-                <a href="register.php">Register</a></p>
-            </div>
-        </form>
-    </div>
+        <div class="redirection">
+            <p>New Customer?</p><br>
+            <a href="register.php">Register</a>
+        </div>
+    </form>
 <?php
 include_once "PHP_Structure/footer.php";
 ?>

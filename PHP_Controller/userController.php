@@ -1,44 +1,65 @@
 <?php
 // Function for DB-Connection
 function connectDB() {
-    include dirname(__DIR__) . "\DB_Handle\dbConnect.php";
+    // include config with the credentials for the database
+    require dirname(__DIR__) . "\Config\config.php";
+    //create database connection
+    $conn = new mysqli($dbConfig['servername'], $dbConfig['username'], $dbConfig['password'], $dbConfig['dbname']);
+
+    //check the connection for errors
+    if($conn->connect_errno != 0) {
+        die("Connection Failed because : " . $conn->connect_error);
+    }
     return $conn;
 }
 
 
 // Server function for Register
 function registerUser($firstname, $lastname, $username, $email, $phoneNumber, $password, $passwordValidation) {
-
+    // DB-Connection
     $conn = connectDB();
 
-    if ($username === "" || $password === "") {
-        return "<div>
-                <h2>Login Failed<br>
-                Please fill in both fields</h2>
-                </div>";
+    $args = func_get_args();
+    $args = array_map(function($value){
+        return trim($value);
+    }, $args);
+
+    // check if input-fields are filled
+    foreach ($args as $value) {
+        if(empty($value)) {
+            return "Register Failed<br>
+                    Please fill in all fields";
+        }
+        elseif(preg_match("/([<|>])/", $value)) {
+            return "Special characters like '<>' are not allowed";
+        }
     }
-    elseif ($password != $passwordValidation) {
-        return "";
+    if ($password !== $passwordValidation) {
+        
     }
 
     //Verify if the "email" already exist
-    $sql = "SELECT email FROM user WHERE email = '?' OR username FROM user WHERE username = ?";
+    $sql = "SELECT email, username FROM user WHERE email = ? OR username = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ss", $email, $username);
+    $stmt->bind_param('ss', $email, $username);
     $stmt->execute();
 
     $result = $stmt->get_result();
     $userdata = $result->fetch_assoc();
 
     if ($userdata != null) {
-        if ($userdata["username"] == $username) {
+        if ($userdata['username'] == $username) {
             echo "The username is already taken!<br>";
         }
-        if ($email["email"] == $email) {
+        if ($userdata['email'] == $email) {
             echo "The Email is already registered with a different account<br>";
         }
         return "The registration was not possible<br>";
     }
+    if () {
+
+    }
+
     else {
         //Hashing password
         $passwordHash = password_hash($password, PASSWORD_BCRYPT);
@@ -59,22 +80,30 @@ function registerUser($firstname, $lastname, $username, $email, $phoneNumber, $p
 
 // Server function for Login
 function loginUser($username, $password) {
-
+    // DB-Connection
     $conn = connectDB();
 
-    // check if both input-fields are filled
-    if ($username === "" || $password === "") {
-        return "<div>
-                <h2>Login Failed<br>
-                Please fill in both fields</h2>
-                </div>";
+    $args = func_get_args();
+    $args = array_map(function($value){
+        return trim($value);
+    },$args);
+
+    // check if input-fields are filled
+    foreach ($args as $value) {
+        if (empty($value)) {
+            return "Please fill in both fields!";
+        }
+        elseif (preg_match("/([<|>])/", $value)) {
+            return "Special characters like '<>' are not allowed!";
+        }
     }
 
     // htmlspecialchars to sanatize input
     $username = htmlspecialchars($username);
     $password = htmlspecialchars($password);
 
-    $stmt = $conn->prepare("SELECT * FROM user WHERE username = ?");
+    $sql = "SELECT * FROM user WHERE username = ?";
+    $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -87,29 +116,32 @@ function loginUser($username, $password) {
         if(password_verify($password, $userdata['password'])) {
             // Start session and save userdata to current session
             session_start();
-            $_SESSION['user_data'] = $userdata;
+            $_SESSION['userdata'] = $userdata;
 
             // Return Welcome message
-            return "<div>
-                    <p> Welcome $username !</p>
-                    <br> You'll be redirected to the Shopping page";
-                    header ("refresh:3; url=offers.php");
-                    "</div>";
+            header ("refresh:3; url=index.php");
+            return "Welcome $username!<br>
+                    You will be redirected to the Homepage!";
         }
         // If password_verify returns false
         else {
-            return "<div>
-                    <h2>Login Failed<br>
-                    Username or Password are Invalid</h2>
-                    </div>";
+            return "Login Failed<br>
+                    Username or Password are Invalid!";
         }
     }
     // If userdata is null
     else {
-        return "<div>
-                <h2>Login Failed<br>
-                User doesn't exist</h2>
-                </div>";
+        return "Login Failed<br>
+                User doesn't exist";
     }
 }
-?>
+
+function logoutUser() {
+
+    // Destroy the session 
+    session_destroy(); 
+
+    // Redirect to login page
+    header("Location: login.php");
+    exit();
+}

@@ -7,4 +7,3 @@ $dbConfig = array(
     "password"  => "PNBKaF3JkgJC9dzo",
     "dbname" => "webshop",
 );
-?>
