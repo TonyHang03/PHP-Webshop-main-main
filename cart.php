@@ -1,23 +1,19 @@
-<?php 
+<?php
 $title = "Shopping Cart";
 include_once "PHP_Structure/header.php";
 ?>
 <body>
     <header>
-        <h1> 
-            <?php 
-                session_start();
-
-                if(isset($_SESSION['user_data']) && !empty($_SESSION['user_data']))
-                {
-                    $user = $_SESSION['user_data']; 
-                    echo $user['username']; 
+        <h1>
+            <?php
+                if(isset($_SESSION['user_data']) && !empty($_SESSION['user_data'])) {
+                    $user = $_SESSION['user_data'];
+                    echo $user['username'];
                 }
-                else
-                {
+                else {
                     echo "Guest";
                 }
-            ?> 
+            ?>
             Shopping Cart
         </h1>
     </header>

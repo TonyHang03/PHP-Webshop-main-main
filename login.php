@@ -1,20 +1,18 @@
+<?php 
+$title = "Login";
+include_once "PHP_Structure/header.php";
+?>
+
 <?php
 // if submit is set, use login function
 if(isset($_POST['submit'])) {
     // Include userController for loginUser function
-    include "PHP_Controller/userController.php";
-
     // Login function 
     $response = loginUser(
         $_POST['username'], 
         $_POST['password']
     );
 }
-?>
-
-<?php 
-$title = "Login";
-include_once "PHP_Structure/header.php";
 ?>
     <form action="" method="post">
         <div class="login">
@@ -35,10 +33,11 @@ include_once "PHP_Structure/header.php";
         </div>
 
         <div class="redirection">
-            <p>New Customer?</p><br>
+            <p>New Customer?</p>
             <a href="register.php">Register</a>
         </div>
     </form>
+
 <?php
 include_once "PHP_Structure/footer.php";
 ?>

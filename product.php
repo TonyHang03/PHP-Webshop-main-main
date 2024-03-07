@@ -1,6 +1,5 @@
 <?php
     session_start();
-
     //check if button 'add_to_cart' is clicked
     if(isset($_POST['add_to_cart'])) {
         $product_id = $_POST['id_product'];
@@ -20,14 +19,8 @@
     }
 ?>
 
-            <!------------------------------------------ PHP END ---------------------------------------->
-            <!-------------------------------------- ------------- ---------------------------------------->
-            <!----------------------------------------- HTML START ---------------------------------------->
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// Cambiare il carello !!!!!!! ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 <?php 
-$title = "Offers";
+$title = "Products";
 include_once "PHP_Structure/header.php";
 ?>
 <body>
@@ -40,34 +33,13 @@ include_once "PHP_Structure/header.php";
                 $user = $_SESSION ['user_data']; 
                 echo $user['username'];
             }
-            else
-            {
+            else {
                 echo "Guest";
             }
-
-            // //Test to output user and pw
-            // if(isset($username, $password)) 
-            // {
-            //     $_SESSION["user_data"] = $user($username);
-            // }
-            // else
-            // {
-            //     echo "Error !! ";
-            // }
         ?> 
         <!-- Other way to display if it is User -->
         <!-- Welcome <?php $user = $_SESSION['user_data']; echo $user['username']; ?> ! -->
     </header>
-
-    <nav> 
-        <ul> 
-            <li><a href="index.php">Home</a></li> 
-            <li><a href="cart.php">Cart</a></li> 
-            <li><a href="logout.php">Logout</a></li> 
-        </ul> 
-    </nav>
-    <hr>
-    <main>
         <section>
             <h2>Products</h2>
             <ul>
@@ -121,12 +93,8 @@ include_once "PHP_Structure/header.php";
                         <button type="submit" name="add_to_cart"> Add to Cart</button> 
                     </form>
                 </li>
-
-                <!-- Add new <li> in the <ul> to create new Products !!!! -->
             </ul>
         </section>
-
-    </main>
 <?php
 include_once "PHP_Structure/footer.php";
 ?>

@@ -1,10 +1,11 @@
 <?php
+// include config with the credentials for the database
+require dirname(__DIR__) . "\Config\config.php";
+
 // Function for DB-Connection
 function connectDB() {
-    // include config with the credentials for the database
-    require dirname(__DIR__) . "\Config\config.php";
     //create database connection
-    $conn = new mysqli($dbConfig['servername'], $dbConfig['username'], $dbConfig['password'], $dbConfig['dbname']);
+    $conn = new mysqli(SERVERNAME, USERNAME, PASSWORD, DBNAME);
 
     //check the connection for errors
     if($conn->connect_errno != 0) {
@@ -19,6 +20,7 @@ function registerUser($firstname, $lastname, $username, $email, $phoneNumber, $p
     // DB-Connection
     $conn = connectDB();
 
+    // put all values from parameters into a array and remove whitespaces at the beginning and end
     $args = func_get_args();
     $args = array_map(function($value){
         return trim($value);
@@ -30,16 +32,22 @@ function registerUser($firstname, $lastname, $username, $email, $phoneNumber, $p
             return "Register Failed<br>
                     Please fill in all fields";
         }
+        // also check for special characters
         elseif(preg_match("/([<|>])/", $value)) {
             return "Special characters like '<>' are not allowed";
         }
     }
-    if ($password !== $passwordValidation) {
-        
+     // Verify if email is valid
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return "Email is not valid!";
+    }
+    // Verify if both passwords are equal
+    if ($password != $passwordValidation) {
+        return "Both passwords do not match!";
     }
 
     //Verify if the "email" already exist
-    $sql = "SELECT email, username FROM user WHERE email = ? OR username = ?";
+    $sql = "SELECT * FROM user WHERE email = ? OR username = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param('ss', $email, $username);
     $stmt->execute();
@@ -47,6 +55,7 @@ function registerUser($firstname, $lastname, $username, $email, $phoneNumber, $p
     $result = $stmt->get_result();
     $userdata = $result->fetch_assoc();
 
+    // Verification for already existing "username" or "email"
     if ($userdata != null) {
         if ($userdata['username'] == $username) {
             echo "The username is already taken!<br>";
@@ -56,14 +65,12 @@ function registerUser($firstname, $lastname, $username, $email, $phoneNumber, $p
         }
         return "The registration was not possible<br>";
     }
-    if () {
-
-    }
 
     else {
-        //Hashing password
+        // Hashing password
         $passwordHash = password_hash($password, PASSWORD_BCRYPT);
 
+        // Preparing query to protect against SQL-Injection
         $sql = "INSERT INTO user(username, email, password, firstname, lastname, telephone_number) 
                 VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
@@ -93,16 +100,13 @@ function loginUser($username, $password) {
         if (empty($value)) {
             return "Please fill in both fields!";
         }
+        // also check for special characters
         elseif (preg_match("/([<|>])/", $value)) {
             return "Special characters like '<>' are not allowed!";
         }
     }
 
-    // htmlspecialchars to sanatize input
-    $username = htmlspecialchars($username);
-    $password = htmlspecialchars($password);
-
-    $sql = "SELECT * FROM user WHERE username = ?";
+    $sql = "SELECT username, password, isAdmin FROM user WHERE username = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $username);
     $stmt->execute();
@@ -115,7 +119,6 @@ function loginUser($username, $password) {
         // Verify password
         if(password_verify($password, $userdata['password'])) {
             // Start session and save userdata to current session
-            session_start();
             $_SESSION['userdata'] = $userdata;
 
             // Return Welcome message
@@ -137,9 +140,8 @@ function loginUser($username, $password) {
 }
 
 function logoutUser() {
-
-    // Destroy the session 
-    session_destroy(); 
+    // Destroy the session
+    session_destroy();
 
     // Redirect to login page
     header("Location: login.php");
