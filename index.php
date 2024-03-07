@@ -10,7 +10,7 @@ include_once "PHP_Structure/header.php";
                 // Write welcome to user
                 $user = $_SESSION['userdata'];
                 echo "Welcome {$user['username']}!";
-                echo "<p><a href='offers.php'> Go to our Products!</a></p>";
+                echo "<p><a href='product.php'> Go to our Products!</a></p>";
             } 
             else {
                 // Show "Login" or "Register" if User is not logged in
